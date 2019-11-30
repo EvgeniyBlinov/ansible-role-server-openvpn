@@ -1,0 +1,10 @@
+---
+openvpn__local_config_dir: "{{ inventory_dir }}/.openvpn"
+
+openvpn__src_repo: https://github.com/EvgeniyBlinov/docker-openvpn.git
+openvpn__src_dir: /opt/openvpn-docker
+openvpn__work_dir: /root/PROJECTS/openvpn/openvpn0
+
+openvpn__server_name: "{{ inventory_hostname }}"
+openvpn__image_name: cent/openvpn-docker
+

@@ -1,0 +1,36 @@
+---
+- name: openvpn | Ensure local config dir exists
+  file:
+    path: "{{ openvpn__local_config_dir }}"
+    state: directory
+  delegate_to: localhost
+
+- name: openvpn | Ensure openvpn dirs exists
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop:
+    - "{{ openvpn__work_dir }}"
+
+- name: openvpn | Clone openvpn src
+  git:
+    repo: "{{ openvpn__src_repo }}"
+    dest: "{{ openvpn__src_dir }}"
+    version: master
+
+#- name: openvpn | Build image
+  #docker_image:
+     #path: "{{ openvpn__src_repo }}"
+     #name: "{{ openvpn__image_name }}"
+
+- name: openvpn | Generate starter script
+  template:
+    src: start.sh
+    dest: "{{ openvpn__work_dir }}/start.sh"
+    mode: +x
+
+- name: openvpn | Fetch configs
+  synchronize:
+    mode: pull
+    src: "{{ openvpn__work_dir }}/data"
+    dest: "{{ openvpn__local_config_dir }}/data"
