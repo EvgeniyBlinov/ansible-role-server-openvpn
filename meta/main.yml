@@ -1,0 +1,22 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: Evgeniy Blinov
+  description: openvpn
+  license: "license (MIT)"
+  min_ansible_version: 2.4
+  platforms:
+    - name: Debian
+      versions:
+      - all
+    - name: Ubuntu
+      versions:
+      - trusty
+      - xenial
+      - bionic
+    - name: CentOS
+      versions:
+      - all
+  galaxy_tags:
+    - openvpn
