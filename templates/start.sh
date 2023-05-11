@@ -48,7 +48,15 @@ function configure {
   cmd docker run --rm -v "${OVPN_DATA}:/etc/openvpn" -it "${OVPN_IMAGE_NAME}" ovpn_initpki nopass
   vim openvpn.conf
   cmd docker run --rm -v "${OVPN_DATA}:/etc/openvpn" -it "${OVPN_IMAGE_NAME}" easyrsa build-client-full CLIENTNAME nopass
+  set -x
   docker run --rm -v "${OVPN_DATA}:/etc/openvpn"     "${OVPN_IMAGE_NAME}" ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
+}
+
+function add_client {
+    local client_name=$1
+    cmd docker run --rm -v "${OVPN_DATA}:/etc/openvpn" -it "${OVPN_IMAGE_NAME}" easyrsa build-client-full ${client_name} nopass
+    set -x
+    docker run --rm -v "${OVPN_DATA}:/etc/openvpn" -it "${OVPN_IMAGE_NAME}" ovpn_getclient "${client_name}" > ${client_name}.ovpn
 }
 
 function start {
@@ -61,4 +69,5 @@ function start {
     "${OVPN_IMAGE_NAME}"
 }
 
-"$ACTION"
+shift
+"$ACTION" "$*"
