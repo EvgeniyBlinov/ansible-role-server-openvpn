@@ -8,3 +8,5 @@ openvpn__work_dir: /root/PROJECTS/openvpn/openvpn0
 openvpn__server_name: "{{ inventory_hostname }}"
 openvpn__image_name: cent/openvpn-docker
 
+openvpn__port: 1194
+

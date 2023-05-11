@@ -29,6 +29,14 @@
     dest: "{{ openvpn__work_dir }}/start.sh"
     mode: +x
 
+- name: openvpn | Generate .env
+  copy:
+    content: |-
+      OVPN_SERVER_NAME={{ openvpn__server_name }}
+      OVPN_PORT={{ openvpn__port }}
+    dest: "{{ openvpn__work_dir }}/.env"
+    mode: +x
+
 - name: openvpn | Is data exists
   stat:
     path: "{{ openvpn__work_dir }}/data"
@@ -40,3 +48,5 @@
     src: "{{ openvpn__work_dir }}/data"
     dest: "{{ openvpn__local_config_dir }}/data"
   when: _openvpn__data.stat.exists
+  tags:
+    - backup
