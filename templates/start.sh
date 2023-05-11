@@ -62,6 +62,7 @@ function add_client {
 function start {
   cmd docker run \
     -d \
+    --restart always \
     --privileged \
     -v "${OVPN_DATA}:/etc/openvpn" \
     -p "${OVPN_PORT}:1194/udp" \
