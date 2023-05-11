@@ -62,6 +62,8 @@
   stat:
     path: "{{ openvpn__work_dir }}/data"
   register: _openvpn__data
+  tags:
+    - backup
 
 - name: openvpn | Fetch configs
   synchronize:
