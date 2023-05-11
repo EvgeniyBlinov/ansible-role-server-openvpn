@@ -4,6 +4,8 @@
     path: "{{ openvpn__local_config_dir }}"
     state: directory
   delegate_to: localhost
+  tags:
+    - backup
 
 - name: openvpn | Ensure openvpn dirs exists
   file:
