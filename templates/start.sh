@@ -26,7 +26,9 @@ mkdir -p "$OVPN_DATA"
 cd "$OVPN_DATA"
 
 function build {
-  (cd "${OVPN_DOCKER_PROJECT_PATH}" && docker build -t "${OVPN_IMAGE_NAME}" .)
+  if ! docker images | grep -q $OVPN_IMAGE_NAME ; then
+    (cd "${OVPN_DOCKER_PROJECT_PATH}" && docker build -t "${OVPN_IMAGE_NAME}" .)
+  fi
 }
 
 function cmd {
@@ -50,7 +52,7 @@ function configure {
 }
 
 function start {
-  docker run \
+  cmd docker run \
     -d \
     --privileged \
     -v "${OVPN_DATA}:/etc/openvpn" \

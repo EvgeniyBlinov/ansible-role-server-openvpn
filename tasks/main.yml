@@ -16,7 +16,8 @@
   git:
     repo: "{{ openvpn__src_repo }}"
     dest: "{{ openvpn__src_dir }}"
-    version: master
+    version: "{{ openvpn__docker_openvpn__branch }}"
+  when: openvpn__docker_openvpn__clone
 
 #- name: openvpn | Build image
   #docker_image:
@@ -29,11 +30,31 @@
     dest: "{{ openvpn__work_dir }}/start.sh"
     mode: +x
 
+- name: openvpn | Get image name
+  shell: >-
+    docker images | awk '/cent\/openvpn-docker/{print $1}' | head -1
+  register: _openvpn__OVPN_IMAGE_NAME
+  ignore_errors: true
+  when: openvpn__OVPN_IMAGE_NAME == ""
+
+- set_fact:
+    openvpn__OVPN_IMAGE_NAME: "{{ _openvpn__OVPN_IMAGE_NAME.stdout }}"
+  when:
+     openvpn__OVPN_IMAGE_NAME == "" and
+    _openvpn__OVPN_IMAGE_NAME.stdout != ""
+
+- set_fact:
+    openvpn__OVPN_IMAGE_NAME: "cent/openvpn-docker_{{ lookup('pipe', 'date +%F') }}"
+  when:
+    openvpn__OVPN_IMAGE_NAME == "" and
+    _openvpn__OVPN_IMAGE_NAME.stdout == ""
+
 - name: openvpn | Generate .env
   copy:
     content: |-
       OVPN_SERVER_NAME={{ openvpn__server_name }}
       OVPN_PORT={{ openvpn__port }}
+      OVPN_IMAGE_NAME={{ openvpn__OVPN_IMAGE_NAME }}
     dest: "{{ openvpn__work_dir }}/.env"
     mode: +x
 
